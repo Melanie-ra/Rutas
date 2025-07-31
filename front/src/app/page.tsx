@@ -464,7 +464,7 @@ const Page: React.FC = () => {
                   }}
                 >
                   <option
-                    style={{ fontFamily: 'Segoe UI' }}
+                    style={{ fontFamily: 'Segoe UI',}}
                     value=""
                   >Seleccione</option>
                 </select>
@@ -475,11 +475,13 @@ const Page: React.FC = () => {
             </div>
             <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
               <textarea
+                className="input-vigencia"
                 style={{
                   width: '73%',
                   padding: '0.5rem',
                   height: '2.3rem',
                   border: '0.5px solid #9a9a9a6c',
+                  outline: 'none',
                 }}
               />
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', width: '190px', marginLeft: '1rem' }}>
@@ -487,21 +489,25 @@ const Page: React.FC = () => {
                   <label>Vigencia</label>
                   <input
                     type="text"
+                    className="input-vigencia"
                     style={{
                       width: '50px',
                       padding: '0.5rem',
                       border: '0.5px solid #9a9a9a6c',
                       height: '1.8rem',
                       marginLeft: '1.5rem',
+                      outline: 'none',
                     }}
                   />
                   <input
                     type="text"
+                    className="input-vigencia"
                     style={{
                       width: '50px',
                       padding: '0.5rem',
                       border: '0.5px solid #9a9a9a6c',
                       height: '1.8rem',
+                      outline: 'none'
                     }}
                   />
                 </div>
@@ -509,11 +515,13 @@ const Page: React.FC = () => {
                   <label>Plazo (Días)</label>
                   <input
                     type="text"
+                    className="input-vigencia"
                     style={{
                       width: '110px',
                       padding: '0.5rem',
                       border: '0.5px solid #9a9a9a6c',
                       height: '1.8rem',
+                      outline: 'none'
                     }}
                   />
                 </div>
@@ -537,6 +545,7 @@ const Page: React.FC = () => {
                 type="checkbox"
                 checked={isObligatoria}
                 onChange={() => setIsObligatoria(!isObligatoria)}
+                className="checkbox-red"
                 style={{ marginRight: '1rem', verticalAlign: 'middle' }}
               />
 
@@ -560,7 +569,7 @@ const Page: React.FC = () => {
                             padding: '0.25rem',
                             borderBottom: '1px solid #eee',
                             cursor: 'pointer',
-                            backgroundColor: selectedItemsIndices.includes(index) ? '#f0f0f0' : 'transparent',
+                            backgroundColor: selectedItemsIndices.includes(index) ? '#d14c4c' : 'transparent',
                             transition: 'background-color 0.2s',
                           }}
                         >
@@ -627,7 +636,7 @@ const Page: React.FC = () => {
                             padding: '0.25rem',
                             borderBottom: '1px solid #eee',
                             cursor: 'pointer',
-                            backgroundColor: selectedItemsIndices.includes(index + establecimientoListState.length) ? '#ffffff' : 'transparent',
+                            backgroundColor: selectedItemsIndices.includes(index + establecimientoListState.length) ? '#d14c4c' : 'transparent',
                             transition: 'background-color 0.2s',
                           }}
                         >

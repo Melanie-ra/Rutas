@@ -58,7 +58,7 @@ const ToggleMenu: React.FC<ToggleMenuProps> = ({
                                             ? 'bg-yellow-200 text-gray-700'
                                             : 'text-gray-500'
                                     }`}
-                                    style={{ fontFamily: 'Segoe UI', overflow: 'hidden', whiteSpace: 'nowrap'}}
+                                    style={{ fontFamily: 'Segoe UI', overflow: 'hidden', whiteSpace: 'nowrap', marginTop: '5px' }}
                                 >
                                     <span className="text-xl text-red-800 p-0.5">{option.icon}</span>
                                     {isMenuOpen && (

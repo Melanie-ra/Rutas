@@ -60,7 +60,7 @@ a {
 
 
 .input-vigencia:focus {
-  border: 1.5px solid #d14c4c !important;
+  border: 2px solid #99020B !important;
   transition: border-color 0.2s !important;
 }
 

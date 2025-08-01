@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { FaUserCircle, FaPowerOff, FaChevronRight, FaChevronLeft, FaSearch, FaPlay, FaFastForward, FaFastBackward } from 'react-icons/fa';
+import { FaUserCircle, FaPowerOff, FaChevronRight, FaChevronLeft, FaSearch, FaPlay, FaSync, FaSpinner, FaFastForward, FaFastBackward, FaCrosshairs, FaTrash, FaPaperPlane, FaRoute } from 'react-icons/fa';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import ToggleMenu from '../Components/common/ToggleMenu';
 
@@ -67,7 +67,7 @@ const Page: React.FC = () => {
       label: 'Motor de rutas',
       value: 'search',
       href: '/',
-      icon: <FaSearch />,
+      icon: <FaRoute />,
     },
   ];
 
@@ -164,8 +164,7 @@ const Page: React.FC = () => {
       setEstablecimientoList(newEstablecimientoList);
       setSelectedItems([]);
       setSelectedItemsIndices([]);
-      
-      // Limpiar todas las conexiones cuando se mueven todos los elementos
+
       console.log('🧹 Limpiando todas las conexiones');
       setEdges([]);
     }
@@ -900,6 +899,7 @@ const Page: React.FC = () => {
               <div style={{ flex: '1' }}>
                 <label className="mr-6">Clasificador de trámites</label>
                 <select
+                className="input-vigencia"
                   style={{
                     width: '62.5%',
                     border: '0.5px solid #9a9a9a6c',
@@ -981,6 +981,7 @@ const Page: React.FC = () => {
                   <label>Plazo (Días)</label>
                   <input
                     type="text"
+                    className="input-vigencia"
                     style={{
                       width: '110px',
                       padding: '0.5rem',
@@ -999,8 +1000,12 @@ const Page: React.FC = () => {
                   padding: '0.2rem 0.8rem',
                   borderRadius: '6px',
                   alignSelf: 'flex-start',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.3rem'
                 }}
               >
+                <FaPaperPlane />
                 Enviar
               </button>
             </div>
@@ -1016,31 +1021,121 @@ const Page: React.FC = () => {
 
               <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem', gap: '1rem' }}>
                   <div style={{ flex: '0 0 200px' }}>
-                    <h3 style={{ fontSize: '1rem', marginBottom: '0.5rem' }}>Disponibles</h3>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                      <h3 style={{ fontSize: '1rem', margin: 0 }}>Disponibles</h3>
+                      <button
+                        onClick={reloadApiData}
+                        disabled={isLoadingApi || !selectedClasificador}
+                        style={{
+                          background: (isLoadingApi || !selectedClasificador) ? '#6c757d' : '#99020B',
+                          color: 'white',
+                          padding: '0.4rem 0.4rem',
+                          borderRadius: '3px',
+                          border: 'none',
+                          cursor: (isLoadingApi || !selectedClasificador) ? 'not-allowed' : 'pointer',
+                          fontSize: '0.7rem',
+                          opacity: (isLoadingApi || !selectedClasificador) ? 0.6 : 1
+                        }}
+                        title={
+                          !selectedClasificador ? 'Selecciona un clasificador primero' :
+                          isLoadingApi ? 'Cargando...' : 'Recargar datos de la API'
+                        }
+                      >
+                        {isLoadingApi ? <FaSpinner /> : <FaSync />}
+                      </button>
+                    </div>
                     <div
                       style={{
                         border: '1px solid #ccc',
                         padding: '0.5rem',
-                        height: '450px',
+                        height: '400px',
                         overflowY: 'auto',
                         backgroundColor: '#fff',
                       }}
                     >
-                      {establecimientoListState.map((item, index) => (
-                        <div
-                          key={index}
-                          onClick={() => handleItemClick(index, false)}
-                          style={{
-                            padding: '0.25rem',
-                            borderBottom: '1px solid #eee',
-                            cursor: 'pointer',
-                            backgroundColor: selectedItemsIndices.includes(index) ? '#f0f0f0' : 'transparent',
-                            transition: 'background-color 0.2s',
-                          }}
-                        >
-                          {item}
+                      {isLoadingApi ? (
+                        <div style={{ 
+                          display: 'flex', 
+                          flexDirection: 'column',
+                          alignItems: 'center', 
+                          justifyContent: 'center', 
+                          height: '100%',
+                          color: '#666'
+                        }}>
+                          <div style={{
+                            width: '40px',
+                            height: '40px',
+                            border: '4px solid #f3f3f3',
+                            borderTop: '4px solid #99020B',
+                            borderRadius: '50%',
+                            animation: 'spin 1s linear infinite',
+                            marginBottom: '1rem'
+                          }}></div>
+                          <span style={{ fontSize: '0.9rem' }}>Cargando datos...</span>
                         </div>
-                      ))}
+                      ) : apiError ? (
+                        <div style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          height: '100%',
+                          color: '#dc3545',
+                          textAlign: 'center',
+                          padding: '1rem'
+                        }}>
+                          <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>⚠️</div>
+                          <div style={{ fontSize: '0.8rem', marginBottom: '0.5rem' }}>{apiError}</div>
+                          <button
+                            onClick={reloadApiData}
+                            style={{
+                              background: '#99020B',
+                              color: 'white',
+                              padding: '0.3rem 0.6rem',
+                              borderRadius: '3px',
+                              border: 'none',
+                              cursor: 'pointer',
+                              fontSize: '0.7rem'
+                            }}
+                          >
+                            Reintentar
+                          </button>
+                        </div>
+                      ) : (
+                        selectedClasificador ? (
+                          establecimientoListState.map((item, index) => (
+                            <div
+                              key={index}
+                              onClick={() => handleItemClick(index, false)}
+                              style={{
+                                padding: '0.25rem',
+                                borderBottom: '1px solid #eee',
+                                cursor: 'pointer',
+                                backgroundColor: selectedItemsIndices.includes(index) ? '#fcf6ea' : 'transparent',
+                                transition: 'background-color 0.2s',
+                              }}
+                            >
+                              {item}
+                            </div>
+                          ))
+                        ) : (
+                          <div style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            height: '100%',
+                            color: '#6c757d',
+                            textAlign: 'center',
+                            padding: '2rem'
+                          }}>
+                            <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📋</div>
+                            <div style={{ fontSize: '0.9rem', lineHeight: '1.4' }}>
+                              Selecciona un clasificador de trámites para ver los campos disponibles
+                            </div>
+                          </div>
+                        )
+                      )}
                     </div>
                   </div>
 
@@ -1079,23 +1174,7 @@ const Page: React.FC = () => {
                   >
                     <FaChevronRight />
                   </button>
-                  <button
-                    onClick={togglePlayPause}
-                    disabled={!selectedClasificador || selectedItemsIndices.length === 0}
-                    style={{
-                      background: (!selectedClasificador || selectedItemsIndices.length === 0) ? '#d6d6d6' : '#ccc',
-                      color: (!selectedClasificador || selectedItemsIndices.length === 0) ? '#999' : '#333',
-                      border: 'none',
-                      padding: '0.5rem',
-                      marginBottom: '0.5rem',
-                      cursor: (!selectedClasificador || selectedItemsIndices.length === 0) ? 'not-allowed' : 'pointer',
-                      borderRadius: '4px',
-                      opacity: (!selectedClasificador || selectedItemsIndices.length === 0) ? 0.6 : 1
-                    }}
-                    title="Mover y reproducir"
-                  >
-                    <FaPlay />
-                  </button>
+                  
                   <button
                     onClick={moveToLeft}
                     disabled={!selectedClasificador || selectedItemsIndices.length === 0}
@@ -1137,7 +1216,7 @@ const Page: React.FC = () => {
                       style={{
                         border: '1px solid #ccc',
                         padding: '0.5rem',
-                        height: '450px',
+                        height: '400px',
                         overflowY: 'auto',
                         backgroundColor: '#fff',
                       }}
@@ -1150,7 +1229,7 @@ const Page: React.FC = () => {
                             padding: '0.25rem',
                             borderBottom: '1px solid #eee',
                             cursor: 'pointer',
-                            backgroundColor: selectedItemsIndices.includes(index + establecimientoListState.length) ? '#ffffff' : 'transparent',
+                            backgroundColor: selectedItemsIndices.includes(index + establecimientoListState.length) ? '#fcf6ea' : 'transparent',
                             transition: 'background-color 0.2s',
                           }}
                         >
@@ -1163,7 +1242,7 @@ const Page: React.FC = () => {
                 <div style={{ flex: '1', minWidth: '600px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                     <h3 style={{ fontSize: '1rem', margin: 0 }}>Diagrama de Flujo</h3>
-                    <div>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
                       <button
                         onClick={() => {
                           if (cyRef.current) {
@@ -1178,9 +1257,12 @@ const Page: React.FC = () => {
                           borderRadius: '4px',
                           border: 'none',
                           cursor: 'pointer',
-                          marginRight: '0.5rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.3rem'
                         }}
                       >
+                        <FaCrosshairs />
                         Centrar
                       </button>
                       <button
@@ -1197,8 +1279,12 @@ const Page: React.FC = () => {
                           borderRadius: '4px',
                           border: 'none',
                           cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.3rem'
                         }}
                       >
+                        <FaTrash />
                         Limpiar
                       </button>
                     </div>

@@ -922,7 +922,7 @@ const Page: React.FC = () => {
                   }}
                 >
                   <option
-                    style={{ fontFamily: 'Segoe UI' }}
+                    style={{ fontFamily: 'Segoe UI',}}
                     value=""
                   >Seleccione</option>
                   {nombreRuta && (
@@ -941,11 +941,13 @@ const Page: React.FC = () => {
             </div>
             <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
               <textarea
+                className="input-vigencia"
                 style={{
                   width: '73%',
                   padding: '0.5rem',
                   height: '2.3rem',
                   border: '0.5px solid #9a9a9a6c',
+                  outline: 'none',
                 }}
               />
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', width: '190px', marginLeft: '1rem' }}>
@@ -953,33 +955,38 @@ const Page: React.FC = () => {
                   <label>Vigencia</label>
                   <input
                     type="text"
+                    className="input-vigencia"
                     style={{
                       width: '50px',
                       padding: '0.5rem',
                       border: '0.5px solid #9a9a9a6c',
                       height: '1.8rem',
                       marginLeft: '1.5rem',
+                      outline: 'none',
                     }}
                   />
                   <input
                     type="text"
+                    className="input-vigencia"
                     style={{
                       width: '50px',
                       padding: '0.5rem',
                       border: '0.5px solid #9a9a9a6c',
                       height: '1.8rem',
+                      outline: 'none'
                     }}
                   />
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                   <label>Plazo (Días)</label>
                   <input
-                    type='text'
+                    type="text"
                     style={{
                       width: '110px',
                       padding: '0.5rem',
                       border: '0.5px solid #9a9a9a6c',
                       height: '1.8rem',
+                      outline: 'none'
                     }}
                   />
                 </div>
@@ -1003,128 +1010,39 @@ const Page: React.FC = () => {
                 type="checkbox"
                 checked={isObligatoria}
                 onChange={() => setIsObligatoria(!isObligatoria)}
+                className="checkbox-red"
                 style={{ marginRight: '1rem', verticalAlign: 'middle' }}
               />
 
               <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem', gap: '1rem' }}>
-                <div style={{ flex: '0 0 200px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                    <h3 style={{ fontSize: '1rem', margin: 0 }}>Disponibles</h3>
-                    <button
-                      onClick={reloadApiData}
-                      disabled={isLoadingApi || !selectedClasificador}
+                  <div style={{ flex: '0 0 200px' }}>
+                    <h3 style={{ fontSize: '1rem', marginBottom: '0.5rem' }}>Disponibles</h3>
+                    <div
                       style={{
-                        background: (isLoadingApi || !selectedClasificador) ? '#6c757d' : '#99020B',
-                        color: 'white',
-                        padding: '0.2rem 0.4rem',
-                        borderRadius: '3px',
-                        border: 'none',
-                        cursor: (isLoadingApi || !selectedClasificador) ? 'not-allowed' : 'pointer',
-                        fontSize: '0.7rem',
-                        opacity: (isLoadingApi || !selectedClasificador) ? 0.6 : 1
+                        border: '1px solid #ccc',
+                        padding: '0.5rem',
+                        height: '450px',
+                        overflowY: 'auto',
+                        backgroundColor: '#fff',
                       }}
-                      title={
-                        !selectedClasificador ? 'Selecciona un clasificador primero' :
-                        isLoadingApi ? 'Cargando...' : 'Recargar datos de la API'
-                      }
                     >
-                      {isLoadingApi ? '⏳' : '🔄'}
-                    </button>
-                  </div>
-                  <div
-                    style={{
-                      border: '1px solid #ccc',
-                      padding: '0.5rem',
-                      height: '400px',
-                      overflowY: 'auto',
-                      backgroundColor: '#fff',
-                    }}
-                  >
-                    {isLoadingApi ? (
-                      <div style={{ 
-                        display: 'flex', 
-                        flexDirection: 'column',
-                        alignItems: 'center', 
-                        justifyContent: 'center', 
-                        height: '100%',
-                        color: '#666'
-                      }}>
-                        <div style={{
-                          width: '40px',
-                          height: '40px',
-                          border: '4px solid #f3f3f3',
-                          borderTop: '4px solid #99020B',
-                          borderRadius: '50%',
-                          animation: 'spin 1s linear infinite',
-                          marginBottom: '1rem'
-                        }}></div>
-                        <span style={{ fontSize: '0.9rem' }}>Cargando datos...</span>
-                      </div>
-                    ) : apiError ? (
-                      <div style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        height: '100%',
-                        color: '#dc3545',
-                        textAlign: 'center',
-                        padding: '1rem'
-                      }}>
-                        <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>⚠️</div>
-                        <div style={{ fontSize: '0.8rem', marginBottom: '0.5rem' }}>{apiError}</div>
-                        <button
-                          onClick={reloadApiData}
+                      {establecimientoListState.map((item, index) => (
+                        <div
+                          key={index}
+                          onClick={() => handleItemClick(index, false)}
                           style={{
-                            background: '#99020B',
-                            color: 'white',
-                            padding: '0.3rem 0.6rem',
-                            borderRadius: '3px',
-                            border: 'none',
+                            padding: '0.25rem',
+                            borderBottom: '1px solid #eee',
                             cursor: 'pointer',
-                            fontSize: '0.7rem'
+                            backgroundColor: selectedItemsIndices.includes(index) ? '#f0f0f0' : 'transparent',
+                            transition: 'background-color 0.2s',
                           }}
                         >
-                          Reintentar
-                        </button>
-                      </div>
-                    ) : (
-                      selectedClasificador ? (
-                        establecimientoListState.map((item, index) => (
-                          <div
-                            key={index}
-                            onClick={() => handleItemClick(index, false)}
-                            style={{
-                              padding: '0.25rem',
-                              borderBottom: '1px solid #eee',
-                              cursor: 'pointer',
-                              backgroundColor: selectedItemsIndices.includes(index) ? '#f0f0f0' : 'transparent',
-                              transition: 'background-color 0.2s',
-                            }}
-                          >
-                            {item}
-                          </div>
-                        ))
-                      ) : (
-                        <div style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          height: '100%',
-                          color: '#6c757d',
-                          textAlign: 'center',
-                          padding: '2rem'
-                        }}>
-                          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>📋</div>
-                          <div style={{ fontSize: '0.9rem', lineHeight: '1.4' }}>
-                            Selecciona un clasificador de trámites para ver los campos disponibles
-                          </div>
+                          {item}
                         </div>
-                      )
-                    )}
+                      ))}
+                    </div>
                   </div>
-                </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
                   <button
@@ -1213,34 +1131,34 @@ const Page: React.FC = () => {
                   </button>
                 </div>
 
-                <div style={{ flex: '0 0 200px' }}>
-                  <h3 style={{ fontSize: '1rem', marginBottom: '0.5rem' }}>Seleccionados</h3>
-                  <div
-                    style={{
-                      border: '1px solid #ccc',
-                      padding: '0.5rem',
-                      height: '400px',
-                      overflowY: 'auto',
-                      backgroundColor: '#fff',
-                    }}
-                  >
-                    {selectedItems.map((item, index) => (
-                      <div
-                        key={index}
-                        onClick={() => handleItemClick(index, true)}
-                        style={{
-                          padding: '0.25rem',
-                          borderBottom: '1px solid #eee',
-                          cursor: 'pointer',
-                          backgroundColor: selectedItemsIndices.includes(index + establecimientoListState.length) ? '#ffffff' : 'transparent',
-                          transition: 'background-color 0.2s',
-                        }}
-                      >
-                        {item}
-                      </div>
-                    ))}
+                  <div style={{ flex: '0 0 200px' }}>
+                    <h3 style={{ fontSize: '1rem', marginBottom: '0.5rem' }}>Seleccionados</h3>
+                    <div
+                      style={{
+                        border: '1px solid #ccc',
+                        padding: '0.5rem',
+                        height: '450px',
+                        overflowY: 'auto',
+                        backgroundColor: '#fff',
+                      }}
+                    >
+                      {selectedItems.map((item, index) => (
+                        <div
+                          key={index}
+                          onClick={() => handleItemClick(index, true)}
+                          style={{
+                            padding: '0.25rem',
+                            borderBottom: '1px solid #eee',
+                            cursor: 'pointer',
+                            backgroundColor: selectedItemsIndices.includes(index + establecimientoListState.length) ? '#ffffff' : 'transparent',
+                            transition: 'background-color 0.2s',
+                          }}
+                        >
+                          {item}
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
 
                 <div style={{ flex: '1', minWidth: '600px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>

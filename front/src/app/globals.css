@@ -58,6 +58,44 @@ a {
   text-align: center;
 }
 
+
+.input-vigencia:focus {
+  border: 1.5px solid #d14c4c !important;
+  transition: border-color 0.2s !important;
+}
+
+.checkbox-red {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  border: 0.5px solid #9a9a9a6c;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  position: relative;
+  vertical-align: middle;
+  transition: border-color 0.2s;
+}
+.checkbox-red:checked {
+  background: #99020B;
+  
+}
+.checkbox-red:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 0px;
+  width: 6px;
+  height: 12px;
+  border: solid #fff;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+  display: block;
+}
+
+
+
 .sidebar-button .text {
   flex-grow: 0.5;
 }
